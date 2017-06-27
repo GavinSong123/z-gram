@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>first-level</title>
+  <script type="text/javascript" src="d3/d3.js"></script>
+</head>
+<body>
+<div id="content"></div>
+<div id="select"></div>
+</body>
+<script type="text/javascript">
+    let selected_color;
+    let svg_content = d3.select("#content").append("svg"),
+        content_width = 350,
+        content_height = 500;
+    svg_content.attr("width", content_width).attr("height", content_height);
+    svg_content.append("g").append("rect").attr("x", 0).attr("y", 0)
+        .attr("width", content_width).attr("height", content_height / 2)
+        .attr("fill", "red").on("click", function () {
+        if (selected_color) {
+            d3.select(this).transition().duration(1000)
+                .ease(d3.easeCircleOut).attr("fill", selected_color);
+            if (checkOnColor()) {
+                svg_content.append("text").attr("x", content_width / 2)
+                    .attr("y", content_height / 2).text("Success!")
+            }
+        }
+    });
+    svg_content.append("g").append("rect").attr("x", 0).attr("y", content_height / 2)
+        .attr("width", content_width).attr("height", content_height / 2)
+        .attr("fill", "yellow").on("click", function () {
+        if (selected_color) {
+            d3.select(this).transition().duration(1000)
+                .ease(d3.easeCircleOut).attr("fill", selected_color);
+            if (checkOnColor()) {
+                svg_content.append("text").attr("x", content_width / 2)
+                    .attr("y", content_height / 2).text("Success!")
+            }
+        }
+    });
+
+    let svg_select = d3.select("#select").append("svg"),
+        select_width = 100,
+        select_height = 50;
+    svg_select.attr("width", select_width).attr("height", select_height);
+    svg_select.append("g").append("rect").attr("x", 0).attr("y", 0)
+        .attr("width", select_width / 2).attr("height", select_height)
+        .attr("fill", "red").on("click", function () {
+        selected_color = this.getAttribute("fill");
+    });
+    svg_select.append("g").append("rect").attr("x", select_width / 2).attr("y", 0)
+        .attr("width", select_width / 2).attr("height", select_height)
+        .attr("fill", "yellow").on("click", function () {
+        selected_color = this.getAttribute("fill");
+    });
+
+    let checkOnColor = function () {
+        let groups = svg_content.selectAll("g")._groups[0];
+        let color = groups[0].getAttribute("fill");
+        for (let i = 1; i < groups.length; i++) {
+            if (color !== groups[i].getAttribute("fill")) {
+                return false;
+            }
+        }
+        return true;
+    }
+</script>
+</html>
